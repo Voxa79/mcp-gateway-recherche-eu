@@ -7,41 +7,25 @@ services:
   # MCP GATEWAY - Point d'entrée unique
   # ═══════════════════════════════════════════════════════════════
   gateway:
-    image: docker/mcp-gateway
+    image: nginx:alpine
     container_name: mcp-gateway-recherche-eu
     ports:
-      - "8080:8080"
-    command:
-      - --transport=streaming
-      - --port=8080
-      - --catalog=/app/catalog.yaml
-      - --config=/app/config.yaml
-      - --secrets=/run/secrets/mcp_secrets
-      - --log-calls
-      - --verbose
+      - "3000:80"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./catalog-docker-mcp.yaml:/app/catalog.yaml:ro
-      - ./config.yaml:/app/config.yaml:ro
-    secrets:
-      - mcp_secrets
+      - ./:/usr/share/nginx/html/mcp-gateway/recherche-eu:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      - GATEWAY_NAME=recherche-eu
+      - GATEWAY_TRANSPORT=streaming
     networks:
       - mcp-network
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 4G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
 
 # ═══════════════════════════════════════════════════════════════
 # SECRETS - Gestion sécurisée des credentials
@@ -55,5 +39,5 @@ secrets:
 # ═══════════════════════════════════════════════════════════════
 networks:
   mcp-network:
-    driver: bridge
-    name: mcp-gateway-recherche-eu
+    external: true
+    name: mcp-gateway-catalogs
