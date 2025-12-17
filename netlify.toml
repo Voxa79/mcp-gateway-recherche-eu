@@ -1,0 +1,38 @@
+# Netlify Configuration - MCP Gateway Recherche EU
+[build]
+  publish = "."
+  command = "echo 'Static site - no build required'"
+
+[build.environment]
+  GATEWAY_NAME = "recherche-eu"
+  GATEWAY_TRANSPORT = "streaming"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  for = "/*.yaml"
+  [headers.values]
+    Content-Type = "application/x-yaml"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/*.yml"
+  [headers.values]
+    Content-Type = "application/x-yaml"
+    Access-Control-Allow-Origin = "*"
+
+[[redirects]]
+  from = "/docs"
+  to = "/README.md"
+  status = 200
+
+[[redirects]]
+  from = "/catalog"
+  to = "/catalog-docker-mcp.yaml"
+  status = 200
