@@ -1,0 +1,64 @@
+# EuroSciVoc API - MCP Server
+name: euroscivoc
+image: vardaa/mcp-euroscivoc
+type: server
+
+meta:
+  category: reference
+  tags:
+    - euroscivoc
+    - vocabulary
+    - classification
+    - eu
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+
+about:
+  title: "EuroSciVoc API"
+  description: |
+    Serveur MCP pour accéder au vocabulaire scientifique européen.
+    
+    Contenu disponible:
+    • Vocabulaire scientifique européen
+    • Classification des domaines
+    • Termes standardisés
+    
+    Idéal pour:
+    • Classification des projets
+    • Standardisation des termes
+    • Alignement avec taxonomies EU
+  icon: "🏷️"
+
+source:
+  api_base: "https://data.europa.eu/data/datasets/euroscivoc-the-european-science-vocabulary"
+  documentation: "https://op.europa.eu/en/web/eu-vocabularies/euroscivoc"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - rdf
+  - skos
+
+tools:
+  - name: search_concepts
+    description: "Rechercher des concepts"
+    parameters:
+      query:
+        type: string
+      language:
+        type: string
+        default: "en"
+        
+  - name: get_concept
+    description: "Détails d'un concept"
+    parameters:
+      concept_uri:
+        type: string
+        
+  - name: get_hierarchy
+    description: "Hiérarchie d'un concept"
+    parameters:
+      concept_uri:
+        type: string

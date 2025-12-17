@@ -1,0 +1,66 @@
+# Eurostat API - MCP Server
+name: eurostat
+image: vardaa/mcp-eurostat
+type: server
+
+meta:
+  category: data
+  tags:
+    - eurostat
+    - statistics
+    - eu
+    - economics
+    - r&d
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+
+about:
+  title: "Eurostat API"
+  description: |
+    Serveur MCP pour accéder aux statistiques européennes Eurostat.
+    
+    Contenu disponible:
+    • Statistiques économiques UE
+    • Indicateurs R&D par pays
+    • Données de contexte
+    
+    Idéal pour:
+    • Contextualisation des propositions
+    • Données socio-économiques
+    • Indicateurs de recherche
+  icon: "📈"
+
+source:
+  api_base: "https://ec.europa.eu/eurostat/api/dissemination/"
+  documentation: "https://ec.europa.eu/eurostat/web/main/data/web-services"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: get_dataset
+    description: "Récupérer un dataset"
+    parameters:
+      dataset_code:
+        type: string
+      filters:
+        type: object
+        
+  - name: search_datasets
+    description: "Rechercher des datasets"
+    parameters:
+      query:
+        type: string
+        
+  - name: get_rd_indicators
+    description: "Indicateurs R&D par pays"
+    parameters:
+      country:
+        type: string
+      year:
+        type: integer

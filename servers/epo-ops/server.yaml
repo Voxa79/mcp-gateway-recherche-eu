@@ -1,0 +1,73 @@
+# EPO Open Patent Services (OPS) - MCP Server
+name: epo-ops
+image: vardaa/mcp-epo-ops
+type: server
+
+meta:
+  category: ip
+  tags:
+    - epo
+    - patents
+    - intellectual-property
+    - prior-art
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+
+about:
+  title: "EPO Open Patent Services (OPS)"
+  description: |
+    Serveur MCP pour accéder aux brevets européens.
+    
+    Contenu disponible:
+    • 140M+ brevets
+    • Métadonnées, classifications
+    • État de l'art technologique
+    
+    Idéal pour:
+    • Recherche de prior art
+    • Analyse technologique
+    • Veille brevets
+  icon: "📜"
+
+source:
+  api_base: "https://ops.epo.org/3.2/rest-services/"
+  documentation: "https://www.epo.org/searching-for-patents/data/web-services/ops.html"
+
+config:
+  env:
+    - name: EPO_CONSUMER_KEY
+      description: "Consumer key (gratuit)"
+      required: true
+    - name: EPO_CONSUMER_SECRET
+      description: "Consumer secret (gratuit)"
+      required: true
+
+auth:
+  type: oauth2
+  free_for_research: true
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: search_patents
+    description: "Rechercher des brevets"
+    parameters:
+      query:
+        type: string
+      cpc_class:
+        type: string
+        description: "Classification CPC"
+        
+  - name: get_patent
+    description: "Détails d'un brevet"
+    parameters:
+      patent_number:
+        type: string
+        
+  - name: get_family
+    description: "Famille de brevets"
+    parameters:
+      patent_number:
+        type: string

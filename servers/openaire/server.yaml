@@ -1,0 +1,226 @@
+# OpenAIRE Research Graph - MCP Server
+# Format 100% compatible Docker MCP Registry
+
+name: openaire
+image: vardaa/mcp-openaire
+type: server
+
+meta:
+  category: partners
+  tags:
+    - openaire
+    - research-graph
+    - open-science
+    - publications
+    - datasets
+    - projects
+  gateway: recherche-eu
+  priority: 5  # Critique
+
+about:
+  title: "OpenAIRE Research Graph"
+  description: |
+    Serveur MCP pour accéder au graphe de recherche OpenAIRE, la plus grande 
+    infrastructure européenne de données de recherche ouvertes.
+    
+    Contenu disponible:
+    • 150M+ publications scientifiques
+    • 15M+ datasets de recherche
+    • 3M+ projets de recherche
+    • 200K+ organisations
+    • Liens entre toutes ces entités
+    
+    Cas d'usage:
+    • Recherche de partenaires avec expertise prouvée
+    • État de l'art complet avec données liées
+    • Analyse d'impact des projets
+    • Découverte de datasets réutilisables
+  icon: https://www.openaire.eu/favicon.ico
+
+source:
+  project: https://github.com/vardaa/mcp-openaire
+  branch: main
+  api_base: https://api.openaire.eu/
+  documentation: https://graph.openaire.eu/docs/
+
+run:
+  command:
+    - --transport=stdio
+
+# API publique - pas de secrets requis
+config:
+  description: "OpenAIRE est une API publique. Un token optionnel augmente le rate limit."
+  secrets:
+    - name: openaire.access_token
+      env: OPENAIRE_ACCESS_TOKEN
+      example: your-optional-token
+
+allowHosts:
+  - api.openaire.eu:443
+  - graph.openaire.eu:443
+
+tools:
+  - name: search_publications
+    description: "Rechercher des publications scientifiques"
+    parameters:
+      query:
+        type: string
+        description: "Termes de recherche"
+        required: true
+      type:
+        type: string
+        description: "Type (publication, dataset, software, other)"
+      from_date:
+        type: string
+        description: "Date de publication minimum (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "Date de publication maximum"
+      funder:
+        type: string
+        description: "Financeur (EC, NSF, NIH...)"
+      country:
+        type: string
+        description: "Pays de l'auteur"
+      open_access:
+        type: boolean
+        description: "Uniquement Open Access"
+      limit:
+        type: integer
+        default: 20
+
+  - name: search_datasets
+    description: "Rechercher des datasets de recherche"
+    parameters:
+      query:
+        type: string
+        description: "Termes de recherche"
+        required: true
+      format:
+        type: string
+        description: "Format de données"
+      license:
+        type: string
+        description: "Type de licence"
+      limit:
+        type: integer
+        default: 20
+
+  - name: search_projects
+    description: "Rechercher des projets de recherche"
+    parameters:
+      query:
+        type: string
+        description: "Termes de recherche"
+      funder:
+        type: string
+        description: "Financeur"
+      funding_stream:
+        type: string
+        description: "Programme de financement"
+      status:
+        type: string
+        description: "Statut (ongoing, closed)"
+      limit:
+        type: integer
+        default: 20
+
+  - name: search_organizations
+    description: "Rechercher des organisations de recherche"
+    parameters:
+      query:
+        type: string
+        description: "Nom de l'organisation"
+      country:
+        type: string
+        description: "Code pays"
+      type:
+        type: string
+        description: "Type d'organisation"
+      limit:
+        type: integer
+        default: 20
+
+  - name: get_entity
+    description: "Récupérer les détails complets d'une entité OpenAIRE"
+    parameters:
+      id:
+        type: string
+        description: "ID OpenAIRE de l'entité"
+        required: true
+      type:
+        type: string
+        description: "Type d'entité (publication, dataset, project, organization)"
+        required: true
+
+  - name: get_related
+    description: "Récupérer les entités liées (citations, datasets associés, projets)"
+    parameters:
+      id:
+        type: string
+        description: "ID OpenAIRE de l'entité source"
+        required: true
+      relation_type:
+        type: string
+        description: "Type de relation (cites, isProducedBy, isPartOf...)"
+
+  - name: get_organization_outputs
+    description: "Publications et datasets d'une organisation"
+    parameters:
+      org_id:
+        type: string
+        description: "ID de l'organisation"
+        required: true
+      output_type:
+        type: string
+        description: "Type de sortie (publication, dataset)"
+      limit:
+        type: integer
+        default: 50
+
+  - name: get_project_outputs
+    description: "Résultats d'un projet (publications, datasets, software)"
+    parameters:
+      project_id:
+        type: string
+        description: "ID du projet"
+        required: true
+
+resources:
+  - name: funders
+    description: "Liste des financeurs indexés"
+    uri: "openaire://funders"
+    
+  - name: subjects
+    description: "Vocabulaire des sujets de recherche"
+    uri: "openaire://subjects"
+
+prompts:
+  - name: find_expert_organizations
+    description: "Trouver des organisations expertes dans un domaine"
+    arguments:
+      - name: domain
+        description: "Domaine de recherche"
+        required: true
+      - name: country
+        description: "Pays préféré"
+        required: false
+
+  - name: comprehensive_literature_review
+    description: "Revue de littérature complète avec datasets liés"
+    arguments:
+      - name: topic
+        description: "Sujet de la revue"
+        required: true
+      - name: years
+        description: "Période (ex: 2020-2024)"
+        required: false
+
+metadata:
+  license: "CC-BY 4.0"
+  owner: OpenAIRE AMKE
+  requires_license: false
+  rate_limit: "100 req/min (public), 1000 req/min (with token)"
+  
+readme: "https://graph.openaire.eu/docs/"
+upstream: "https://www.openaire.eu/"

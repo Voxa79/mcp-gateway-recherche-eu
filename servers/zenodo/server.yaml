@@ -1,0 +1,71 @@
+# Zenodo API - MCP Server
+name: zenodo
+image: vardaa/mcp-zenodo
+type: server
+
+meta:
+  category: data
+  tags:
+    - zenodo
+    - cern
+    - open-access
+    - datasets
+    - publications
+    - code
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+
+about:
+  title: "Zenodo API"
+  description: |
+    Serveur MCP pour accéder à Zenodo (hébergé par CERN).
+    
+    Contenu disponible:
+    • 4M+ records open access
+    • Publications, datasets, code
+    • DOIs permanents
+    
+    Idéal pour:
+    • Ressources open access
+    • Datasets de recherche
+    • Code source scientifique
+  icon: "🔓"
+
+source:
+  api_base: "https://zenodo.org/api/"
+  documentation: "https://developers.zenodo.org/"
+
+config:
+  env:
+    - name: ZENODO_ACCESS_TOKEN
+      description: "Token gratuit (optionnel)"
+      required: false
+
+auth:
+  type: apiKey
+  free_for_research: true
+
+formats:
+  - json
+
+tools:
+  - name: search_records
+    description: "Rechercher des records"
+    parameters:
+      query:
+        type: string
+      type:
+        type: string
+        enum: ["publication", "dataset", "software", "poster"]
+        
+  - name: get_record
+    description: "Détails d'un record"
+    parameters:
+      record_id:
+        type: string
+        
+  - name: get_files
+    description: "Fichiers d'un record"
+    parameters:
+      record_id:
+        type: string

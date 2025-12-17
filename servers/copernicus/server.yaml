@@ -1,0 +1,99 @@
+# Copernicus Data Access API - MCP Server
+name: copernicus
+image: vardaa/mcp-copernicus
+type: server
+
+meta:
+  category: data
+  tags:
+    - copernicus
+    - satellite
+    - environment
+    - climate
+    - earth-observation
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+  sector_specific: environment
+
+about:
+  title: "Copernicus Data Access API"
+  description: |
+    Serveur MCP pour accéder aux données satellites Copernicus.
+    
+    🌍 SPÉCIFIQUE AU SECTEUR ENVIRONNEMENT/CLIMAT
+    
+    Contenu disponible:
+    • Données Sentinel (1, 2, 3, 5P)
+    • Observations terrestres
+    • Données atmosphériques
+    • Données océaniques
+    
+    Idéal pour:
+    • Projets environnementaux
+    • Recherche climatique
+    • Observation de la Terre
+  icon: "🛰️"
+
+source:
+  api_base: "https://dataspace.copernicus.eu/api/"
+  documentation: "https://documentation.dataspace.copernicus.eu/"
+  legacy: "https://scihub.copernicus.eu/"
+
+config:
+  env:
+    - name: COPERNICUS_USERNAME
+      description: "Username Copernicus (gratuit)"
+      required: true
+    - name: COPERNICUS_PASSWORD
+      description: "Password Copernicus"
+      required: true
+
+auth:
+  type: basic
+  free_for_research: true
+  note: "Compte gratuit requis sur dataspace.copernicus.eu"
+
+formats:
+  - json
+  - geojson
+
+tools:
+  - name: search_products
+    description: "Rechercher des produits satellites"
+    parameters:
+      collection:
+        type: string
+        enum: ["SENTINEL-1", "SENTINEL-2", "SENTINEL-3", "SENTINEL-5P"]
+      bbox:
+        type: string
+        description: "Bounding box (west,south,east,north)"
+      date_range:
+        type: string
+        description: "Format: YYYY-MM-DD/YYYY-MM-DD"
+      cloud_cover:
+        type: integer
+        description: "Max cloud cover %"
+        default: 30
+        
+  - name: get_product_metadata
+    description: "Métadonnées d'un produit"
+    parameters:
+      product_id:
+        type: string
+        
+  - name: download_quicklook
+    description: "Télécharger un aperçu"
+    parameters:
+      product_id:
+        type: string
+        
+  - name: get_atmospheric_data
+    description: "Données atmosphériques (Sentinel-5P)"
+    parameters:
+      parameter:
+        type: string
+        enum: ["NO2", "O3", "CO", "CH4", "SO2"]
+      bbox:
+        type: string
+      date:
+        type: string

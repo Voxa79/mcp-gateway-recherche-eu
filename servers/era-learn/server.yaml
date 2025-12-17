@@ -1,0 +1,63 @@
+# ERA-LEARN API - MCP Server
+name: era-learn
+image: vardaa/mcp-era-learn
+type: server
+
+meta:
+  category: funding
+  tags:
+    - era-learn
+    - partnerships
+    - transnational
+    - eu
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "ERA-LEARN API"
+  description: |
+    Serveur MCP pour accéder aux partenariats européens ERA-LEARN.
+    
+    Contenu disponible:
+    • Partenariats européens
+    • Appels transnationaux
+    • Projets financés
+    
+    Idéal pour:
+    • Appels transnationaux
+    • Partenariats public-privé
+    • Initiatives ERA
+  icon: "🤝"
+
+source:
+  api_base: "https://www.era-learn.eu/"
+  documentation: "https://www.era-learn.eu/network-information"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+
+tools:
+  - name: search_partnerships
+    description: "Rechercher des partenariats"
+    parameters:
+      query:
+        type: string
+      type:
+        type: string
+        
+  - name: get_calls
+    description: "Appels transnationaux ouverts"
+    parameters:
+      status:
+        type: string
+        enum: ["open", "closed", "forthcoming"]
+        
+  - name: get_partnership_details
+    description: "Détails d'un partenariat"
+    parameters:
+      partnership_id:
+        type: string

@@ -1,0 +1,97 @@
+# EU Funding & Tenders Portal API - MCP Server
+name: eu-funding-portal
+image: vardaa/mcp-eu-funding-portal
+type: server
+
+meta:
+  category: funding
+  tags:
+    - eu
+    - funding
+    - tenders
+    - horizon-europe
+    - grants
+    - research
+    - european-commission
+  gateway: recherche-eu
+  priority: 5  # ⭐⭐⭐⭐⭐ ABSOLUE
+
+about:
+  title: "EU Funding & Tenders Portal"
+  description: |
+    Serveur MCP pour accéder à l'API officielle du portail EU Funding & Tenders.
+    
+    Fonctionnalités:
+    • Recherche d'appels à projets ouverts/fermés
+    • Accès aux topics et deadlines
+    • Critères d'éligibilité
+    • Informations sur les programmes (Horizon Europe, Digital Europe, etc.)
+    
+    Endpoints clés:
+    • /topic-list - Liste des topics
+    • /search - Recherche d'opportunités
+    
+    Authentification: Aucune requise pour consultation
+  icon: "💰"
+
+source:
+  api_base: "https://ec.europa.eu/info/funding-tenders/opportunities/data/"
+  documentation: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/support/apis"
+  
+config:
+  description: Configuration du serveur EU Funding Portal
+  env:
+    - name: EU_FUNDING_API_BASE
+      value: "https://ec.europa.eu/info/funding-tenders/opportunities/data/"
+    - name: RATE_LIMIT
+      value: "100"
+      description: "Requêtes par minute"
+  parameters:
+    type: object
+    properties:
+      programmes:
+        type: array
+        description: "Programmes à surveiller (HORIZON, DIGITAL, CREATIVE, etc.)"
+        default: ["HORIZON", "DIGITAL"]
+      languages:
+        type: array
+        description: "Langues des résultats"
+        default: ["en", "fr"]
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: search_calls
+    description: "Rechercher des appels à projets par mots-clés, programme, deadline"
+    parameters:
+      query:
+        type: string
+        description: "Mots-clés de recherche"
+      programme:
+        type: string
+        description: "Programme (HORIZON, DIGITAL, etc.)"
+      status:
+        type: string
+        enum: ["open", "closed", "forthcoming"]
+        default: "open"
+        
+  - name: get_topic_details
+    description: "Obtenir les détails d'un topic spécifique"
+    parameters:
+      topic_id:
+        type: string
+        description: "Identifiant du topic"
+        
+  - name: get_deadlines
+    description: "Lister les prochaines deadlines"
+    parameters:
+      days_ahead:
+        type: integer
+        default: 90
+        description: "Nombre de jours à l'avance"

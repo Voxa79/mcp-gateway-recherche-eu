@@ -1,0 +1,90 @@
+# EU Funding Portal Partner Search API - MCP Server
+name: eu-partner-search
+image: vardaa/mcp-eu-partner-search
+type: server
+
+meta:
+  category: partners
+  tags:
+    - eu
+    - partners
+    - consortium
+    - organizations
+    - expertise
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "EU Partner Search API"
+  description: |
+    Serveur MCP pour accéder au portail de recherche de partenaires EU.
+    
+    Contenu disponible:
+    • Profils d'organisations
+    • Historique de participation aux projets EU
+    • Expertises déclarées
+    • Recherche de partenaires par domaine
+    
+    Idéal pour:
+    • Construction de consortiums
+    • Identification de partenaires qualifiés
+    • Validation d'expérience EU
+  icon: "🤝"
+
+source:
+  api_base: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/"
+  documentation: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/partner-search"
+  note: "Accès via EU Login ou scraping structuré"
+
+config:
+  env:
+    - name: EU_LOGIN_USERNAME
+      description: "EU Login username (optionnel)"
+      required: false
+    - name: EU_LOGIN_PASSWORD
+      description: "EU Login password (optionnel)"
+      required: false
+
+auth:
+  type: euLogin
+  free_for_research: true
+  note: "Compte EU Login gratuit requis pour accès complet"
+
+formats:
+  - json
+
+tools:
+  - name: search_partners
+    description: "Rechercher des partenaires par expertise"
+    parameters:
+      expertise:
+        type: string
+        description: "Domaine d'expertise"
+      country:
+        type: string
+        description: "Code pays ISO (BE, FR, DE, etc.)"
+      organization_type:
+        type: string
+        enum: ["research", "industry", "sme", "public", "ngo"]
+        
+  - name: get_organization_profile
+    description: "Profil détaillé d'une organisation"
+    parameters:
+      pic:
+        type: string
+        description: "Participant Identification Code"
+        
+  - name: get_participation_history
+    description: "Historique de participation aux projets EU"
+    parameters:
+      pic:
+        type: string
+        
+  - name: search_by_project
+    description: "Trouver des partenaires ayant participé à des projets similaires"
+    parameters:
+      project_topic:
+        type: string
+      role:
+        type: string
+        enum: ["coordinator", "participant"]

@@ -1,0 +1,85 @@
+# Scopus API - MCP Server
+name: scopus
+image: vardaa/mcp-scopus
+type: server
+
+meta:
+  category: literature
+  tags:
+    - scopus
+    - elsevier
+    - citations
+    - h-index
+    - journals
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+  requires_license: true
+
+about:
+  title: "Scopus API"
+  description: |
+    Serveur MCP pour accéder à Scopus (Elsevier).
+    
+    ⚠️ REQUIERT UNE LICENCE INSTITUTIONNELLE
+    
+    Contenu disponible:
+    • 50M+ abstracts
+    • Citation analysis, h-index
+    • 20,500+ journals
+    • Métriques d'impact
+    
+    Idéal pour:
+    • Analyse bibliométrique avancée
+    • Métriques d'impact
+    • Classement des chercheurs
+  icon: "📊"
+
+source:
+  api_base: "https://api.elsevier.com/"
+  documentation: "https://dev.elsevier.com/"
+
+config:
+  env:
+    - name: SCOPUS_API_KEY
+      description: "API key Scopus (licence institutionnelle requise)"
+      required: true
+    - name: SCOPUS_INST_TOKEN
+      description: "Token institutionnel"
+      required: false
+
+auth:
+  type: apiKey
+  free_for_research: false
+  note: "Nécessite licence institutionnelle Elsevier"
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: search_documents
+    description: "Rechercher des documents"
+    parameters:
+      query:
+        type: string
+      date_range:
+        type: string
+        description: "Format: YYYY-YYYY"
+        
+  - name: get_author_metrics
+    description: "Métriques d'un auteur (h-index, citations)"
+    parameters:
+      author_id:
+        type: string
+        
+  - name: get_journal_metrics
+    description: "Métriques d'un journal (SJR, SNIP)"
+    parameters:
+      issn:
+        type: string
+        
+  - name: citation_overview
+    description: "Vue d'ensemble des citations"
+    parameters:
+      scopus_id:
+        type: string

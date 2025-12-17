@@ -1,0 +1,64 @@
+# Wikidata SPARQL Endpoint - MCP Server
+name: wikidata
+image: vardaa/mcp-wikidata
+type: server
+
+meta:
+  category: data
+  tags:
+    - wikidata
+    - sparql
+    - knowledge-graph
+    - entities
+  gateway: recherche-eu
+  priority: 2  # ⭐⭐
+
+about:
+  title: "Wikidata SPARQL Endpoint"
+  description: |
+    Serveur MCP pour accéder au knowledge graph Wikidata.
+    
+    Contenu disponible:
+    • Données structurées ouvertes
+    • Entités, relations
+    • Contexte encyclopédique
+    
+    Idéal pour:
+    • Enrichissement de données
+    • Contexte général
+    • Liens entre entités
+  icon: "🌐"
+
+source:
+  api_base: "https://query.wikidata.org/sparql"
+  documentation: "https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+  - rdf
+
+tools:
+  - name: sparql_query
+    description: "Exécuter une requête SPARQL"
+    parameters:
+      query:
+        type: string
+        
+  - name: get_entity
+    description: "Récupérer une entité par QID"
+    parameters:
+      qid:
+        type: string
+        
+  - name: search_entities
+    description: "Rechercher des entités"
+    parameters:
+      search:
+        type: string
+      language:
+        type: string
+        default: "en"

@@ -1,0 +1,64 @@
+# Research Organization Registry (ROR) API - MCP Server
+name: ror
+image: vardaa/mcp-ror
+type: server
+
+meta:
+  category: organizations
+  tags:
+    - ror
+    - organizations
+    - institutions
+    - affiliations
+    - research
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "Research Organization Registry (ROR) API"
+  description: |
+    Serveur MCP pour accéder au registre ROR des organisations de recherche.
+    
+    Contenu disponible:
+    • 100K+ organisations de recherche
+    • Affiliations standardisées
+    • Identifiants uniques
+    
+    Idéal pour:
+    • Validation des partenaires
+    • Standardisation des affiliations
+    • Recherche d'organisations
+  icon: "🏛️"
+
+source:
+  api_base: "https://api.ror.org/"
+  documentation: "https://ror.readme.io/docs/rest-api"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+
+tools:
+  - name: search_organizations
+    description: "Rechercher des organisations"
+    parameters:
+      query:
+        type: string
+      filter:
+        type: string
+        description: "Filtres (country, type, etc.)"
+        
+  - name: get_organization
+    description: "Détails d'une organisation par ROR ID"
+    parameters:
+      ror_id:
+        type: string
+        
+  - name: affiliation_match
+    description: "Matcher une affiliation textuelle"
+    parameters:
+      affiliation:
+        type: string

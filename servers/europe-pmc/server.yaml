@@ -1,0 +1,76 @@
+# Europe PMC API - MCP Server
+name: europe-pmc
+image: vardaa/mcp-europe-pmc
+type: server
+
+meta:
+  category: literature
+  tags:
+    - europe-pmc
+    - biomedical
+    - life-sciences
+    - preprints
+    - text-mining
+  gateway: recherche-eu
+  priority: 5  # ⭐⭐⭐⭐⭐ (pour sciences de la vie)
+
+about:
+  title: "Europe PMC API"
+  description: |
+    Serveur MCP pour accéder à Europe PMC (PubMed Central européen).
+    
+    Contenu disponible:
+    • 42M+ abstracts biomédicaux
+    • 9M+ full texts
+    • Preprints (34 serveurs)
+    • Annotations text-mining (1.3B)
+    
+    Idéal pour:
+    • Recherche biomédicale
+    • Sciences de la vie
+    • Accès aux preprints
+  icon: "🧬"
+
+source:
+  api_base: "https://www.ebi.ac.uk/europepmc/webservices/rest/"
+  documentation: "https://europepmc.org/RestfulWebService"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: search_articles
+    description: "Rechercher des articles biomédicaux"
+    parameters:
+      query:
+        type: string
+      resultType:
+        type: string
+        enum: ["lite", "core", "idlist"]
+        default: "lite"
+        
+  - name: get_full_text
+    description: "Récupérer le texte complet"
+    parameters:
+      pmcid:
+        type: string
+        
+  - name: get_citations
+    description: "Citations d'un article"
+    parameters:
+      pmid:
+        type: string
+        
+  - name: search_preprints
+    description: "Rechercher des preprints"
+    parameters:
+      query:
+        type: string
+      source:
+        type: string
+        description: "Serveur de preprints (bioRxiv, medRxiv, etc.)"

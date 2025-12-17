@@ -1,0 +1,64 @@
+# DataCite REST API - MCP Server
+name: datacite
+image: vardaa/mcp-datacite
+type: server
+
+meta:
+  category: data
+  tags:
+    - datacite
+    - doi
+    - datasets
+    - research-data
+    - code
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "DataCite REST API"
+  description: |
+    Serveur MCP pour accéder aux DOIs de données de recherche.
+    
+    Contenu disponible:
+    • 40M+ DOIs de données
+    • Datasets, code, ressources
+    • Liens avec publications
+    
+    Idéal pour:
+    • Trouver des datasets
+    • Lier données et publications
+    • Ressources de recherche
+  icon: "💾"
+
+source:
+  api_base: "https://api.datacite.org/"
+  documentation: "https://support.datacite.org/docs/api"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+
+tools:
+  - name: search_dois
+    description: "Rechercher des DOIs de données"
+    parameters:
+      query:
+        type: string
+      resource_type:
+        type: string
+        enum: ["Dataset", "Software", "Text", "Collection"]
+        
+  - name: get_doi
+    description: "Métadonnées d'un DOI"
+    parameters:
+      doi:
+        type: string
+        
+  - name: get_related_works
+    description: "Ressources liées"
+    parameters:
+      doi:
+        type: string

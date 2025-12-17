@@ -1,0 +1,60 @@
+# Open Funder Registry (Crossref) - MCP Server
+name: open-funder-registry
+image: vardaa/mcp-open-funder-registry
+type: server
+
+meta:
+  category: indicators
+  tags:
+    - funders
+    - crossref
+    - grants
+    - funding
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+
+about:
+  title: "Open Funder Registry (Crossref)"
+  description: |
+    Serveur MCP pour accéder au registre des financeurs.
+    
+    Contenu disponible:
+    • 30K+ organismes financeurs
+    • Identifiants standardisés
+    • Politiques de financement
+    
+    Idéal pour:
+    • Identifier des financeurs
+    • Standardiser les références
+    • Analyse des sources de financement
+  icon: "🏦"
+
+source:
+  api_base: "https://api.crossref.org/funders"
+  documentation: "https://api.crossref.org/swagger-ui/index.html"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+
+tools:
+  - name: search_funders
+    description: "Rechercher des financeurs"
+    parameters:
+      query:
+        type: string
+        
+  - name: get_funder
+    description: "Détails d'un financeur"
+    parameters:
+      funder_id:
+        type: string
+        
+  - name: get_funder_works
+    description: "Publications financées"
+    parameters:
+      funder_id:
+        type: string

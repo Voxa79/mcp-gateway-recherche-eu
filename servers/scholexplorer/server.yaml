@@ -1,0 +1,58 @@
+# Scholexplorer API (OpenAIRE) - MCP Server
+name: scholexplorer
+image: vardaa/mcp-scholexplorer
+type: server
+
+meta:
+  category: indicators
+  tags:
+    - scholexplorer
+    - openaire
+    - links
+    - publications
+    - data
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "Scholexplorer API (OpenAIRE)"
+  description: |
+    Serveur MCP pour explorer les liens publications-données.
+    
+    Contenu disponible:
+    • Liens publications-données
+    • Citations interdisciplinaires
+    • 65M+ entrées text-mined
+    
+    Idéal pour:
+    • Trouver des datasets liés
+    • Analyse interdisciplinaire
+    • Liens recherche-données
+  icon: "🔗"
+
+source:
+  api_base: "https://graph.openaire.eu/docs/apis/scholexplorer/"
+  documentation: "https://graph.openaire.eu/docs/apis/scholexplorer/"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+
+tools:
+  - name: get_links
+    description: "Liens pour une publication"
+    parameters:
+      doi:
+        type: string
+        
+  - name: search_links
+    description: "Rechercher des liens"
+    parameters:
+      query:
+        type: string
+      source_type:
+        type: string
+        enum: ["publication", "dataset"]

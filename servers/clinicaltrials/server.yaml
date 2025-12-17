@@ -1,0 +1,81 @@
+# ClinicalTrials.gov API - MCP Server
+name: clinicaltrials
+image: vardaa/mcp-clinicaltrials
+type: server
+
+meta:
+  category: literature
+  tags:
+    - clinicaltrials
+    - health
+    - medical
+    - trials
+    - fda
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+  sector_specific: health
+
+about:
+  title: "ClinicalTrials.gov API"
+  description: |
+    Serveur MCP pour accéder aux essais cliniques enregistrés.
+    
+    🏥 SPÉCIFIQUE AU SECTEUR SANTÉ
+    
+    Contenu disponible:
+    • 400K+ essais cliniques
+    • Protocoles, résultats
+    • Sponsors, sites
+    • Statuts et phases
+    
+    Idéal pour:
+    • Recherche médicale
+    • Projets santé EU
+    • Partenariats pharma
+  icon: "🏥"
+
+source:
+  api_base: "https://clinicaltrials.gov/api/v2/"
+  documentation: "https://clinicaltrials.gov/data-api/api"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: search_studies
+    description: "Rechercher des essais cliniques"
+    parameters:
+      query:
+        type: string
+      condition:
+        type: string
+        description: "Condition médicale"
+      status:
+        type: string
+        enum: ["recruiting", "completed", "active", "terminated"]
+      country:
+        type: string
+        
+  - name: get_study_details
+    description: "Détails d'un essai"
+    parameters:
+      nct_id:
+        type: string
+        description: "NCT Number"
+        
+  - name: get_study_results
+    description: "Résultats d'un essai"
+    parameters:
+      nct_id:
+        type: string
+        
+  - name: search_by_sponsor
+    description: "Essais par sponsor"
+    parameters:
+      sponsor:
+        type: string

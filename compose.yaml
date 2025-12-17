@@ -1,0 +1,59 @@
+# Docker Compose - MCP Gateway Recherche EU
+# Format 100% compatible Docker MCP Toolkit
+# Usage: docker compose up -d
+
+services:
+  # ═══════════════════════════════════════════════════════════════
+  # MCP GATEWAY - Point d'entrée unique
+  # ═══════════════════════════════════════════════════════════════
+  gateway:
+    image: docker/mcp-gateway
+    container_name: mcp-gateway-recherche-eu
+    ports:
+      - "8080:8080"
+    command:
+      - --transport=streaming
+      - --port=8080
+      - --catalog=/app/catalog.yaml
+      - --config=/app/config.yaml
+      - --secrets=/run/secrets/mcp_secrets
+      - --log-calls
+      - --verbose
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./catalog-docker-mcp.yaml:/app/catalog.yaml:ro
+      - ./config.yaml:/app/config.yaml:ro
+    secrets:
+      - mcp_secrets
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+# ═══════════════════════════════════════════════════════════════
+# SECRETS - Gestion sécurisée des credentials
+# ═══════════════════════════════════════════════════════════════
+secrets:
+  mcp_secrets:
+    file: ./.env
+
+# ═══════════════════════════════════════════════════════════════
+# NETWORKS
+# ═══════════════════════════════════════════════════════════════
+networks:
+  mcp-network:
+    driver: bridge
+    name: mcp-gateway-recherche-eu

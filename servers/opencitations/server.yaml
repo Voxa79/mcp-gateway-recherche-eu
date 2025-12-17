@@ -1,0 +1,61 @@
+# OpenCitations API - MCP Server
+name: opencitations
+image: vardaa/mcp-opencitations
+type: server
+
+meta:
+  category: indicators
+  tags:
+    - opencitations
+    - citations
+    - bibliometrics
+    - open-data
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "OpenCitations API"
+  description: |
+    Serveur MCP pour accéder aux données de citations ouvertes.
+    
+    Contenu disponible:
+    • 1.4B+ citations ouvertes
+    • Réseaux de citations
+    • Citation context
+    
+    Idéal pour:
+    • Analyse d'impact
+    • Réseaux de citations
+    • Bibliométrie ouverte
+  icon: "📊"
+
+source:
+  api_base: "https://opencitations.net/index/api/v2/"
+  documentation: "https://opencitations.net/index/api/v2"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+  - csv
+
+tools:
+  - name: get_citations
+    description: "Citations d'un article (par DOI)"
+    parameters:
+      doi:
+        type: string
+        
+  - name: get_references
+    description: "Références d'un article"
+    parameters:
+      doi:
+        type: string
+        
+  - name: get_citation_count
+    description: "Nombre de citations"
+    parameters:
+      doi:
+        type: string

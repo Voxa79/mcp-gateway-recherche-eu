@@ -1,0 +1,60 @@
+# EU VAT Information Exchange System (VIES) - MCP Server
+name: vies
+image: vardaa/mcp-vies
+type: server
+
+meta:
+  category: compliance
+  tags:
+    - vies
+    - vat
+    - validation
+    - eu
+    - compliance
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+
+about:
+  title: "EU VAT Information Exchange System (VIES)"
+  description: |
+    Serveur MCP pour valider les numéros de TVA européens.
+    
+    Fonctionnalités:
+    • Validation numéros TVA UE
+    • Vérification légalité partenaires
+    
+    Idéal pour:
+    • Validation des partenaires
+    • Compliance consortium
+    • Due diligence
+  icon: "✅"
+
+source:
+  api_base: "https://ec.europa.eu/taxation_customs/vies/"
+  documentation: "https://ec.europa.eu/taxation_customs/vies/technicalInformation.html"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - soap
+  - rest
+
+tools:
+  - name: validate_vat
+    description: "Valider un numéro de TVA"
+    parameters:
+      country_code:
+        type: string
+        description: "Code pays (BE, FR, DE, etc.)"
+      vat_number:
+        type: string
+        
+  - name: check_vat_approval
+    description: "Vérifier l'approbation TVA"
+    parameters:
+      country_code:
+        type: string
+      vat_number:
+        type: string

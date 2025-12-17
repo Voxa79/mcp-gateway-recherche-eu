@@ -1,0 +1,81 @@
+# OpenAlex API - MCP Server
+name: openalex
+image: vardaa/mcp-openalex
+type: server
+
+meta:
+  category: literature
+  tags:
+    - openalex
+    - publications
+    - institutions
+    - authors
+    - concepts
+    - open-access
+  gateway: recherche-eu
+  priority: 5  # ⭐⭐⭐⭐⭐
+
+about:
+  title: "OpenAlex API"
+  description: |
+    Serveur MCP pour accéder à OpenAlex (successeur de Microsoft Academic Graph).
+    
+    Contenu disponible:
+    • 100M+ publications
+    • Agrégation MAG + Crossref + ORCID
+    • Institutions, auteurs, concepts
+    
+    Idéal pour:
+    • Analyse bibliométrique
+    • Cartographie des domaines
+    • Identification d'institutions
+  icon: "📚"
+
+source:
+  api_base: "https://api.openalex.org/"
+  documentation: "https://docs.openalex.org/"
+
+config:
+  env:
+    - name: OPENALEX_EMAIL
+      description: "Email pour polite pool"
+      example: "your-email@example.com"
+
+auth:
+  type: none
+  free_for_research: true
+  rate_limit: "100K/jour recommandé"
+
+formats:
+  - json
+
+tools:
+  - name: search_works
+    description: "Rechercher des publications"
+    parameters:
+      search:
+        type: string
+      filter:
+        type: string
+        
+  - name: search_authors
+    description: "Rechercher des auteurs"
+    parameters:
+      search:
+        type: string
+      filter:
+        type: string
+        
+  - name: search_institutions
+    description: "Rechercher des institutions"
+    parameters:
+      search:
+        type: string
+      country_code:
+        type: string
+        
+  - name: get_concepts
+    description: "Explorer les concepts/domaines"
+    parameters:
+      concept_id:
+        type: string

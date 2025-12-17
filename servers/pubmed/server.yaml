@@ -1,0 +1,71 @@
+# PubMed E-utilities API - MCP Server
+name: pubmed
+image: vardaa/mcp-pubmed
+type: server
+
+meta:
+  category: literature
+  tags:
+    - pubmed
+    - ncbi
+    - biomedical
+    - citations
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "PubMed E-utilities API"
+  description: |
+    Serveur MCP pour accéder à PubMed (NCBI).
+    
+    Contenu disponible:
+    • 37M+ citations biomédicales
+    • Abstracts et métadonnées
+    
+    Idéal pour:
+    • Recherche biomédicale
+    • Citations médicales
+    • État de l'art santé
+  icon: "🏥"
+
+source:
+  api_base: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+  documentation: "https://www.ncbi.nlm.nih.gov/books/NBK25501/"
+
+config:
+  env:
+    - name: NCBI_API_KEY
+      description: "API key gratuite (augmente rate limit)"
+      required: false
+
+auth:
+  type: apiKey
+  free_for_research: true
+  rate_limit: "3 req/sec (10 avec clé)"
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: search
+    description: "Rechercher dans PubMed"
+    parameters:
+      term:
+        type: string
+      retmax:
+        type: integer
+        default: 100
+        
+  - name: fetch
+    description: "Récupérer des articles par PMID"
+    parameters:
+      id:
+        type: string
+        description: "PMID ou liste de PMIDs"
+        
+  - name: get_citations
+    description: "Articles citant un PMID"
+    parameters:
+      pmid:
+        type: string

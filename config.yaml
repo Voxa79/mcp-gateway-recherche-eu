@@ -1,0 +1,47 @@
+# Configuration des serveurs MCP - Recherche EU
+# Ce fichier contient les paramètres de configuration pour chaque serveur
+
+# ═══════════════════════════════════════════════════════════════
+# SERVEURS AVEC CONFIGURATION
+# ═══════════════════════════════════════════════════════════════
+
+# Crossref - Email pour politeness pool (meilleur rate limit)
+crossref:
+  mailto: "contact@vardaa.eu"
+
+# OpenAlex - Email pour polite pool
+openalex:
+  email: "contact@vardaa.eu"
+
+# EU Partner Search - Credentials EU Login (optionnel)
+# eu-partner-search:
+#   eu_login_username: "your-username"
+#   eu_login_password: "your-password"
+
+# ═══════════════════════════════════════════════════════════════
+# SERVEURS AVEC SECRETS (définis dans .env)
+# ═══════════════════════════════════════════════════════════════
+
+# Les secrets sont gérés via le fichier .env et Docker secrets
+# Voir .env.example pour la liste des variables requises
+
+# semantic-scholar:
+#   api_key: (from SEMANTIC_SCHOLAR_API_KEY)
+
+# pubmed:
+#   api_key: (from NCBI_API_KEY)
+
+# scopus:
+#   api_key: (from SCOPUS_API_KEY)
+#   inst_token: (from SCOPUS_INST_TOKEN)
+
+# epo-ops:
+#   consumer_key: (from EPO_CONSUMER_KEY)
+#   consumer_secret: (from EPO_CONSUMER_SECRET)
+
+# zenodo:
+#   access_token: (from ZENODO_ACCESS_TOKEN)
+
+# copernicus:
+#   username: (from COPERNICUS_USERNAME)
+#   password: (from COPERNICUS_PASSWORD)

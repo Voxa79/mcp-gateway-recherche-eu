@@ -1,0 +1,511 @@
+# MCP Gateway - Recherche EU/Wallonie
+# 28 serveurs MCP pour appels à projets européens
+# Compatible Podman Desktop et Docker
+
+version: '3.8'
+
+services:
+  # ═══════════════════════════════════════════════════════════════
+  # MCP GATEWAY CENTRAL
+  # ═══════════════════════════════════════════════════════════════
+  mcp-gateway:
+    image: vardaa/mcp-gateway:latest
+    container_name: mcp-gateway-recherche-eu
+    ports:
+      - "8080:8080"
+    environment:
+      - GATEWAY_NAME=recherche-eu
+      - GATEWAY_TRANSPORT=streaming
+      - LOG_LEVEL=info
+    volumes:
+      - ./catalog.yaml:/app/catalog.yaml:ro
+      - ./servers:/app/servers:ro
+      - mcp-gateway-data:/app/data
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 1: APPELS À PROJETS & FINANCEMENTS
+  # ═══════════════════════════════════════════════════════════════
+  
+  eu-funding-portal:
+    image: vardaa/mcp-eu-funding-portal:latest
+    container_name: mcp-eu-funding-portal
+    environment:
+      - MCP_SERVER_NAME=eu-funding-portal
+      - EU_FUNDING_API_BASE=https://ec.europa.eu/info/funding-tenders/opportunities/data/
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  cordis:
+    image: vardaa/mcp-cordis:latest
+    container_name: mcp-cordis
+    environment:
+      - MCP_SERVER_NAME=cordis
+      - CORDIS_API_BASE=https://cordis.europa.eu/api/
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  era-learn:
+    image: vardaa/mcp-era-learn:latest
+    container_name: mcp-era-learn
+    environment:
+      - MCP_SERVER_NAME=era-learn
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 2: RECHERCHE DE PARTENAIRES
+  # ═══════════════════════════════════════════════════════════════
+  
+  openaire:
+    image: vardaa/mcp-openaire:latest
+    container_name: mcp-openaire
+    environment:
+      - MCP_SERVER_NAME=openaire
+      - OPENAIRE_API_BASE=https://graph.openaire.eu/
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  ror:
+    image: vardaa/mcp-ror:latest
+    container_name: mcp-ror
+    environment:
+      - MCP_SERVER_NAME=ror
+      - ROR_API_BASE=https://api.ror.org/
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  orcid:
+    image: vardaa/mcp-orcid:latest
+    container_name: mcp-orcid
+    environment:
+      - MCP_SERVER_NAME=orcid
+      - ORCID_API_BASE=https://pub.orcid.org/v3.0/
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 3: LITTÉRATURE SCIENTIFIQUE
+  # ═══════════════════════════════════════════════════════════════
+  
+  semantic-scholar:
+    image: vardaa/mcp-semantic-scholar:latest
+    container_name: mcp-semantic-scholar
+    environment:
+      - MCP_SERVER_NAME=semantic-scholar
+      - SEMANTIC_SCHOLAR_API_KEY=${SEMANTIC_SCHOLAR_API_KEY:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  europe-pmc:
+    image: vardaa/mcp-europe-pmc:latest
+    container_name: mcp-europe-pmc
+    environment:
+      - MCP_SERVER_NAME=europe-pmc
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  crossref:
+    image: vardaa/mcp-crossref:latest
+    container_name: mcp-crossref
+    environment:
+      - MCP_SERVER_NAME=crossref
+      - CROSSREF_MAILTO=${CROSSREF_MAILTO:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  openalex:
+    image: vardaa/mcp-openalex:latest
+    container_name: mcp-openalex
+    environment:
+      - MCP_SERVER_NAME=openalex
+      - OPENALEX_EMAIL=${OPENALEX_EMAIL:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  pubmed:
+    image: vardaa/mcp-pubmed:latest
+    container_name: mcp-pubmed
+    environment:
+      - MCP_SERVER_NAME=pubmed
+      - NCBI_API_KEY=${NCBI_API_KEY:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 4: DONNÉES DE RÉFÉRENCE
+  # ═══════════════════════════════════════════════════════════════
+  
+  euroscivoc:
+    image: vardaa/mcp-euroscivoc:latest
+    container_name: mcp-euroscivoc
+    environment:
+      - MCP_SERVER_NAME=euroscivoc
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  cordis-ref:
+    image: vardaa/mcp-cordis-ref:latest
+    container_name: mcp-cordis-ref
+    environment:
+      - MCP_SERVER_NAME=cordis-ref
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 5: INDICATEURS & ÉVALUATION
+  # ═══════════════════════════════════════════════════════════════
+  
+  opencitations:
+    image: vardaa/mcp-opencitations:latest
+    container_name: mcp-opencitations
+    environment:
+      - MCP_SERVER_NAME=opencitations
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  scholexplorer:
+    image: vardaa/mcp-scholexplorer:latest
+    container_name: mcp-scholexplorer
+    environment:
+      - MCP_SERVER_NAME=scholexplorer
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  grist:
+    image: vardaa/mcp-grist:latest
+    container_name: mcp-grist
+    environment:
+      - MCP_SERVER_NAME=grist
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  open-funder-registry:
+    image: vardaa/mcp-open-funder-registry:latest
+    container_name: mcp-open-funder-registry
+    environment:
+      - MCP_SERVER_NAME=open-funder-registry
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 6: COMPLIANCE & VALIDATION
+  # ═══════════════════════════════════════════════════════════════
+  
+  vies:
+    image: vardaa/mcp-vies:latest
+    container_name: mcp-vies
+    environment:
+      - MCP_SERVER_NAME=vies
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 7: PROPRIÉTÉ INTELLECTUELLE
+  # ═══════════════════════════════════════════════════════════════
+  
+  epo-ops:
+    image: vardaa/mcp-epo-ops:latest
+    container_name: mcp-epo-ops
+    environment:
+      - MCP_SERVER_NAME=epo-ops
+      - EPO_CONSUMER_KEY=${EPO_CONSUMER_KEY:-}
+      - EPO_CONSUMER_SECRET=${EPO_CONSUMER_SECRET:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 8: DONNÉES COMPLÉMENTAIRES
+  # ═══════════════════════════════════════════════════════════════
+  
+  eurostat:
+    image: vardaa/mcp-eurostat:latest
+    container_name: mcp-eurostat
+    environment:
+      - MCP_SERVER_NAME=eurostat
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  wikidata:
+    image: vardaa/mcp-wikidata:latest
+    container_name: mcp-wikidata
+    environment:
+      - MCP_SERVER_NAME=wikidata
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  datacite:
+    image: vardaa/mcp-datacite:latest
+    container_name: mcp-datacite
+    environment:
+      - MCP_SERVER_NAME=datacite
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  zenodo:
+    image: vardaa/mcp-zenodo:latest
+    container_name: mcp-zenodo
+    environment:
+      - MCP_SERVER_NAME=zenodo
+      - ZENODO_ACCESS_TOKEN=${ZENODO_ACCESS_TOKEN:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  mcp-gateway-data:
+    driver: local
+
+networks:
+  mcp-network:
+    driver: bridge
+    name: mcp-gateway-recherche-eu
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+
+
+  # ═══════════════════════════════════════════════════════════════
+  # SERVEURS ADDITIONNELS (Secteur-spécifiques)
+  # ═══════════════════════════════════════════════════════════════
+  
+  eu-partner-search:
+    image: vardaa/mcp-eu-partner-search:latest
+    container_name: mcp-eu-partner-search
+    environment:
+      - MCP_SERVER_NAME=eu-partner-search
+      - EU_LOGIN_USERNAME=${EU_LOGIN_USERNAME:-}
+      - EU_LOGIN_PASSWORD=${EU_LOGIN_PASSWORD:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ═══════════════════════════════════════════════════════════════
+  # SERVEURS OPTIONNELS (Activer selon secteur client)
+  # ═══════════════════════════════════════════════════════════════
+  
+  # 📊 Scopus - Requiert licence institutionnelle Elsevier
+  scopus:
+    image: vardaa/mcp-scopus:latest
+    container_name: mcp-scopus
+    environment:
+      - MCP_SERVER_NAME=scopus
+      - SCOPUS_API_KEY=${SCOPUS_API_KEY:-}
+      - SCOPUS_INST_TOKEN=${SCOPUS_INST_TOKEN:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    profiles:
+      - with-scopus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # 🏥 ClinicalTrials - Secteur Santé
+  clinicaltrials:
+    image: vardaa/mcp-clinicaltrials:latest
+    container_name: mcp-clinicaltrials
+    environment:
+      - MCP_SERVER_NAME=clinicaltrials
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    profiles:
+      - health
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # 🧬 UniProt - Secteur Biotech
+  uniprot:
+    image: vardaa/mcp-uniprot:latest
+    container_name: mcp-uniprot
+    environment:
+      - MCP_SERVER_NAME=uniprot
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    profiles:
+      - biotech
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # 🛰️ Copernicus - Secteur Environnement/Climat
+  copernicus:
+    image: vardaa/mcp-copernicus:latest
+    container_name: mcp-copernicus
+    environment:
+      - MCP_SERVER_NAME=copernicus
+      - COPERNICUS_USERNAME=${COPERNICUS_USERNAME:-}
+      - COPERNICUS_PASSWORD=${COPERNICUS_PASSWORD:-}
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    profiles:
+      - environment
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M

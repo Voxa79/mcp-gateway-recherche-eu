@@ -1,0 +1,785 @@
+# MCP Gateway Catalog - Recherche EU/Wallonie
+# Format 100% compatible Docker MCP Toolkit
+# 28 serveurs MCP pour appels à projets européens
+
+name: recherche-eu
+displayName: "🔬 Gateway Recherche EU/Wallonie"
+description: |
+  Gateway MCP complet pour la recherche de financements européens.
+  28 serveurs MCP préconfigurés couvrant appels à projets, partenaires,
+  littérature scientifique, et conformité.
+
+registry:
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 1: APPELS À PROJETS & FINANCEMENTS
+  # ═══════════════════════════════════════════════════════════════
+  
+  eu-funding-portal:
+    title: "EU Funding & Tenders Portal"
+    description: "Accès aux appels à projets Horizon Europe, Digital Europe, et tous les programmes de financement EU"
+    type: server
+    image: vardaa/mcp-eu-funding-portal:latest
+    allowHosts:
+      - ec.europa.eu:443
+      - api.tech.ec.europa.eu:443
+    tools:
+      - name: search_calls
+        description: "Rechercher des appels à projets ouverts"
+      - name: get_call_details
+        description: "Détails d'un appel spécifique"
+      - name: search_funded_projects
+        description: "Rechercher des projets financés"
+      - name: get_programme_info
+        description: "Informations sur un programme de financement"
+    metadata:
+      category: funding
+      tags: [horizon-europe, digital-europe, eu-funding]
+      priority: critical
+      license: "Open Data"
+    readme: "https://ec.europa.eu/info/funding-tenders/opportunities/docs/2021-2027/common/guidance/om_en.pdf"
+
+  cordis:
+    title: "CORDIS - Community Research and Development Information Service"
+    description: "Base de données des projets de recherche financés par l'UE depuis FP1"
+    type: server
+    image: vardaa/mcp-cordis:latest
+    allowHosts:
+      - cordis.europa.eu:443
+      - api.cordis.europa.eu:443
+    tools:
+      - name: search_projects
+        description: "Rechercher des projets par mots-clés, programme, pays"
+      - name: get_project
+        description: "Détails complets d'un projet (budget, partenaires, résultats)"
+      - name: search_organizations
+        description: "Rechercher des organisations participantes"
+      - name: get_results
+        description: "Publications et livrables d'un projet"
+    metadata:
+      category: funding
+      tags: [cordis, eu-projects, research]
+      priority: critical
+      license: "Open Data"
+    readme: "https://cordis.europa.eu/guidance/en"
+
+  era-learn:
+    title: "ERA-LEARN - European Research Area Learning"
+    description: "Partenariats européens et initiatives de programmation conjointe"
+    type: server
+    image: vardaa/mcp-era-learn:latest
+    allowHosts:
+      - era-learn.eu:443
+    tools:
+      - name: search_partnerships
+        description: "Rechercher des partenariats européens"
+      - name: get_partnership_calls
+        description: "Appels d'un partenariat spécifique"
+      - name: search_joint_calls
+        description: "Appels conjoints transnationaux"
+    metadata:
+      category: funding
+      tags: [era, partnerships, joint-programming]
+      priority: high
+      license: "Open Data"
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 2: RECHERCHE DE PARTENAIRES
+  # ═══════════════════════════════════════════════════════════════
+
+  eu-partner-search:
+    title: "EU Partner Search Service"
+    description: "Service officiel de recherche de partenaires pour projets EU"
+    type: server
+    image: vardaa/mcp-eu-partner-search:latest
+    allowHosts:
+      - ec.europa.eu:443
+    tools:
+      - name: search_partners
+        description: "Rechercher des partenaires par expertise, pays, type"
+      - name: get_partner_profile
+        description: "Profil détaillé d'un partenaire potentiel"
+      - name: post_partner_request
+        description: "Publier une recherche de partenaires"
+    config:
+      secrets:
+        - name: eu-partner-search.eu_login_username
+          env: EU_LOGIN_USERNAME
+          example: your-eu-login
+        - name: eu-partner-search.eu_login_password
+          env: EU_LOGIN_PASSWORD
+          example: your-password
+    metadata:
+      category: partners
+      tags: [partner-search, consortium, eu-login]
+      priority: high
+
+  openaire:
+    title: "OpenAIRE Research Graph"
+    description: "Graphe de recherche européen - 150M+ publications, datasets, projets interconnectés"
+    type: server
+    image: vardaa/mcp-openaire:latest
+    allowHosts:
+      - api.openaire.eu:443
+      - graph.openaire.eu:443
+    tools:
+      - name: search_publications
+        description: "Rechercher des publications scientifiques"
+      - name: search_datasets
+        description: "Rechercher des datasets de recherche"
+      - name: search_projects
+        description: "Rechercher des projets de recherche"
+      - name: get_entity
+        description: "Détails d'une entité (publication, dataset, projet)"
+      - name: get_related
+        description: "Entités liées (citations, datasets associés)"
+    metadata:
+      category: partners
+      tags: [openaire, open-science, research-graph]
+      priority: critical
+      license: "CC-BY"
+    readme: "https://graph.openaire.eu/docs/"
+
+  ror:
+    title: "Research Organization Registry (ROR)"
+    description: "Registre mondial des organisations de recherche - 100K+ institutions"
+    type: server
+    image: vardaa/mcp-ror:latest
+    allowHosts:
+      - api.ror.org:443
+    tools:
+      - name: search_organizations
+        description: "Rechercher des organisations par nom, pays, type"
+      - name: get_organization
+        description: "Détails d'une organisation (ROR ID, affiliations)"
+      - name: get_relationships
+        description: "Relations entre organisations (parent, child, related)"
+    metadata:
+      category: organizations
+      tags: [ror, institutions, affiliations]
+      priority: high
+      license: "CC0"
+    readme: "https://ror.readme.io/"
+
+  orcid:
+    title: "ORCID Public API"
+    description: "Identifiants uniques de chercheurs - 15M+ profils"
+    type: server
+    image: vardaa/mcp-orcid:latest
+    allowHosts:
+      - pub.orcid.org:443
+    tools:
+      - name: search_researchers
+        description: "Rechercher des chercheurs par nom, affiliation, domaine"
+      - name: get_profile
+        description: "Profil complet d'un chercheur (publications, emplois)"
+      - name: get_works
+        description: "Publications d'un chercheur"
+    metadata:
+      category: researchers
+      tags: [orcid, researchers, identifiers]
+      priority: high
+      license: "CC0"
+    readme: "https://info.orcid.org/documentation/api-tutorials/"
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 3: LITTÉRATURE SCIENTIFIQUE
+  # ═══════════════════════════════════════════════════════════════
+
+  semantic-scholar:
+    title: "Semantic Scholar API"
+    description: "IA pour la recherche scientifique - 200M+ papers avec analyse sémantique"
+    type: server
+    image: vardaa/mcp-semantic-scholar:latest
+    allowHosts:
+      - api.semanticscholar.org:443
+    tools:
+      - name: search_papers
+        description: "Recherche sémantique de publications"
+      - name: get_paper
+        description: "Détails d'un paper (abstract, citations, références)"
+      - name: get_author
+        description: "Profil d'un auteur avec métriques"
+      - name: get_recommendations
+        description: "Papers recommandés basés sur un paper"
+    config:
+      secrets:
+        - name: semantic-scholar.api_key
+          env: SEMANTIC_SCHOLAR_API_KEY
+          example: your-api-key
+    metadata:
+      category: literature
+      tags: [semantic-scholar, ai, papers]
+      priority: critical
+    readme: "https://api.semanticscholar.org/api-docs/"
+
+  europe-pmc:
+    title: "Europe PMC"
+    description: "Archive biomédicale européenne - 40M+ articles, preprints, patents"
+    type: server
+    image: vardaa/mcp-europe-pmc:latest
+    allowHosts:
+      - www.ebi.ac.uk:443
+      - europepmc.org:443
+    tools:
+      - name: search_literature
+        description: "Rechercher dans la littérature biomédicale"
+      - name: get_article
+        description: "Article complet avec métadonnées"
+      - name: get_citations
+        description: "Citations d'un article"
+      - name: get_references
+        description: "Références d'un article"
+    metadata:
+      category: literature
+      tags: [europe-pmc, biomedical, open-access]
+      priority: critical
+      license: "Open Access"
+    readme: "https://europepmc.org/RestfulWebService"
+
+  crossref:
+    title: "Crossref REST API"
+    description: "Métadonnées de 140M+ publications avec DOI"
+    type: server
+    image: vardaa/mcp-crossref:latest
+    allowHosts:
+      - api.crossref.org:443
+    tools:
+      - name: search_works
+        description: "Rechercher des publications par titre, auteur, DOI"
+      - name: get_work
+        description: "Métadonnées complètes d'une publication"
+      - name: get_funder_works
+        description: "Publications d'un financeur"
+      - name: get_member_works
+        description: "Publications d'un éditeur"
+    config:
+      env:
+        - name: CROSSREF_MAILTO
+          value: "{{crossref.mailto}}"
+          example: your-email@domain.com
+      parameters:
+        type: object
+        properties:
+          mailto:
+            type: string
+            description: "Email pour politeness pool (meilleur rate limit)"
+    metadata:
+      category: literature
+      tags: [crossref, doi, metadata]
+      priority: critical
+      license: "Open"
+    readme: "https://api.crossref.org/swagger-ui/index.html"
+
+  openalex:
+    title: "OpenAlex API"
+    description: "Catalogue ouvert de la recherche mondiale - 250M+ works"
+    type: server
+    image: vardaa/mcp-openalex:latest
+    allowHosts:
+      - api.openalex.org:443
+    tools:
+      - name: search_works
+        description: "Rechercher des publications"
+      - name: search_authors
+        description: "Rechercher des auteurs"
+      - name: search_institutions
+        description: "Rechercher des institutions"
+      - name: search_concepts
+        description: "Rechercher par concepts/domaines"
+      - name: get_entity
+        description: "Détails d'une entité OpenAlex"
+    config:
+      env:
+        - name: OPENALEX_EMAIL
+          value: "{{openalex.email}}"
+          example: your-email@domain.com
+      parameters:
+        type: object
+        properties:
+          email:
+            type: string
+            description: "Email pour polite pool"
+    metadata:
+      category: literature
+      tags: [openalex, open-science, catalog]
+      priority: critical
+      license: "CC0"
+    readme: "https://docs.openalex.org/"
+
+  pubmed:
+    title: "PubMed E-utilities"
+    description: "Base de données biomédicale NCBI - 35M+ citations"
+    type: server
+    image: vardaa/mcp-pubmed:latest
+    allowHosts:
+      - eutils.ncbi.nlm.nih.gov:443
+    tools:
+      - name: search
+        description: "Rechercher dans PubMed"
+      - name: fetch
+        description: "Récupérer des articles par PMID"
+      - name: link
+        description: "Liens entre bases NCBI"
+    config:
+      secrets:
+        - name: pubmed.api_key
+          env: NCBI_API_KEY
+          example: your-ncbi-api-key
+    metadata:
+      category: literature
+      tags: [pubmed, ncbi, biomedical]
+      priority: high
+    readme: "https://www.ncbi.nlm.nih.gov/books/NBK25501/"
+
+  scopus:
+    title: "Scopus API"
+    description: "Base de données Elsevier - 50M+ abstracts, métriques d'impact"
+    type: server
+    image: vardaa/mcp-scopus:latest
+    allowHosts:
+      - api.elsevier.com:443
+    tools:
+      - name: search_documents
+        description: "Rechercher des documents"
+      - name: get_author_metrics
+        description: "Métriques d'un auteur (h-index)"
+      - name: get_journal_metrics
+        description: "Métriques d'un journal (SJR, SNIP)"
+    config:
+      secrets:
+        - name: scopus.api_key
+          env: SCOPUS_API_KEY
+          example: your-scopus-api-key
+        - name: scopus.inst_token
+          env: SCOPUS_INST_TOKEN
+          example: your-institutional-token
+    metadata:
+      category: literature
+      tags: [scopus, elsevier, citations]
+      priority: high
+      requires_license: true
+    readme: "https://dev.elsevier.com/"
+
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 4: DONNÉES DE RÉFÉRENCE
+  # ═══════════════════════════════════════════════════════════════
+
+  euroscivoc:
+    title: "EuroSciVoc - European Science Vocabulary"
+    description: "Vocabulaire scientifique européen pour la classification de la recherche"
+    type: server
+    image: vardaa/mcp-euroscivoc:latest
+    allowHosts:
+      - op.europa.eu:443
+    tools:
+      - name: search_concepts
+        description: "Rechercher des concepts scientifiques"
+      - name: get_concept
+        description: "Détails d'un concept"
+      - name: get_hierarchy
+        description: "Hiérarchie des concepts"
+    metadata:
+      category: reference
+      tags: [euroscivoc, vocabulary, classification]
+      priority: medium
+      license: "CC-BY"
+
+  cordis-ref:
+    title: "CORDIS Reference Data"
+    description: "Données de référence CORDIS - programmes, topics, pays"
+    type: server
+    image: vardaa/mcp-cordis-ref:latest
+    allowHosts:
+      - cordis.europa.eu:443
+    tools:
+      - name: get_programmes
+        description: "Liste des programmes de financement"
+      - name: get_topics
+        description: "Topics d'un programme"
+      - name: get_countries
+        description: "Pays participants"
+    metadata:
+      category: reference
+      tags: [cordis, reference-data]
+      priority: high
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 5: INDICATEURS & ÉVALUATION
+  # ═══════════════════════════════════════════════════════════════
+
+  opencitations:
+    title: "OpenCitations API"
+    description: "Données de citations ouvertes - 1.5B+ citations"
+    type: server
+    image: vardaa/mcp-opencitations:latest
+    allowHosts:
+      - opencitations.net:443
+    tools:
+      - name: get_citations
+        description: "Citations d'un DOI"
+      - name: get_references
+        description: "Références d'un DOI"
+      - name: get_citation_count
+        description: "Nombre de citations"
+    metadata:
+      category: indicators
+      tags: [opencitations, citations, open-data]
+      priority: high
+      license: "CC0"
+    readme: "https://opencitations.net/index/api/v2"
+
+  scholexplorer:
+    title: "Scholexplorer (OpenAIRE)"
+    description: "Liens entre publications et datasets de recherche"
+    type: server
+    image: vardaa/mcp-scholexplorer:latest
+    allowHosts:
+      - api.scholexplorer.openaire.eu:443
+    tools:
+      - name: search_links
+        description: "Rechercher des liens publication-dataset"
+      - name: get_link
+        description: "Détails d'un lien"
+    metadata:
+      category: indicators
+      tags: [scholexplorer, data-links, openaire]
+      priority: high
+
+  grist:
+    title: "GRIST - Grant Information System"
+    description: "Système d'information sur les subventions de recherche"
+    type: server
+    image: vardaa/mcp-grist:latest
+    allowHosts:
+      - grist.ac.uk:443
+    tools:
+      - name: search_grants
+        description: "Rechercher des subventions"
+      - name: get_grant
+        description: "Détails d'une subvention"
+    metadata:
+      category: indicators
+      tags: [grist, grants, uk]
+      priority: medium
+
+  open-funder-registry:
+    title: "Open Funder Registry (Crossref)"
+    description: "Registre des financeurs de recherche - 30K+ organisations"
+    type: server
+    image: vardaa/mcp-open-funder-registry:latest
+    allowHosts:
+      - api.crossref.org:443
+    tools:
+      - name: search_funders
+        description: "Rechercher des financeurs"
+      - name: get_funder
+        description: "Détails d'un financeur"
+      - name: get_funder_works
+        description: "Publications financées"
+    metadata:
+      category: indicators
+      tags: [funders, crossref, registry]
+      priority: medium
+      license: "CC0"
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 6: CONFORMITÉ & VALIDATION
+  # ═══════════════════════════════════════════════════════════════
+
+  vies:
+    title: "VIES - VAT Information Exchange System"
+    description: "Validation des numéros de TVA européens"
+    type: server
+    image: vardaa/mcp-vies:latest
+    allowHosts:
+      - ec.europa.eu:443
+    tools:
+      - name: check_vat
+        description: "Valider un numéro de TVA"
+      - name: check_vat_approx
+        description: "Validation avec correspondance approximative"
+    metadata:
+      category: compliance
+      tags: [vies, vat, validation]
+      priority: high
+      license: "Open"
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 7: PROPRIÉTÉ INTELLECTUELLE
+  # ═══════════════════════════════════════════════════════════════
+
+  epo-ops:
+    title: "EPO Open Patent Services"
+    description: "Données de brevets européens - 130M+ documents"
+    type: server
+    image: vardaa/mcp-epo-ops:latest
+    allowHosts:
+      - ops.epo.org:443
+    tools:
+      - name: search_patents
+        description: "Rechercher des brevets"
+      - name: get_patent
+        description: "Détails d'un brevet"
+      - name: get_family
+        description: "Famille de brevets"
+      - name: get_legal_status
+        description: "Statut juridique"
+    config:
+      secrets:
+        - name: epo-ops.consumer_key
+          env: EPO_CONSUMER_KEY
+          example: your-consumer-key
+        - name: epo-ops.consumer_secret
+          env: EPO_CONSUMER_SECRET
+          example: your-consumer-secret
+    metadata:
+      category: ip
+      tags: [epo, patents, ip]
+      priority: medium
+    readme: "https://developers.epo.org/"
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 8: DONNÉES COMPLÉMENTAIRES
+  # ═══════════════════════════════════════════════════════════════
+
+  eurostat:
+    title: "Eurostat API"
+    description: "Statistiques européennes officielles"
+    type: server
+    image: vardaa/mcp-eurostat:latest
+    allowHosts:
+      - ec.europa.eu:443
+    tools:
+      - name: search_datasets
+        description: "Rechercher des datasets"
+      - name: get_data
+        description: "Récupérer des données statistiques"
+      - name: get_metadata
+        description: "Métadonnées d'un dataset"
+    metadata:
+      category: data
+      tags: [eurostat, statistics, eu]
+      priority: medium
+      license: "Open Data"
+    readme: "https://wikis.ec.europa.eu/display/EUROSTATHELP/API"
+
+  wikidata:
+    title: "Wikidata SPARQL"
+    description: "Base de connaissances libre - 100M+ items"
+    type: server
+    image: vardaa/mcp-wikidata:latest
+    allowHosts:
+      - query.wikidata.org:443
+    tools:
+      - name: sparql_query
+        description: "Exécuter une requête SPARQL"
+      - name: get_entity
+        description: "Récupérer une entité Wikidata"
+      - name: search_entities
+        description: "Rechercher des entités"
+    metadata:
+      category: data
+      tags: [wikidata, knowledge-graph, sparql]
+      priority: low
+      license: "CC0"
+
+  datacite:
+    title: "DataCite REST API"
+    description: "DOIs pour datasets de recherche - 50M+ DOIs"
+    type: server
+    image: vardaa/mcp-datacite:latest
+    allowHosts:
+      - api.datacite.org:443
+    tools:
+      - name: search_dois
+        description: "Rechercher des DOIs"
+      - name: get_doi
+        description: "Métadonnées d'un DOI"
+      - name: get_provider
+        description: "Informations sur un provider"
+    metadata:
+      category: data
+      tags: [datacite, doi, datasets]
+      priority: high
+      license: "CC0"
+    readme: "https://support.datacite.org/docs/api"
+
+  zenodo:
+    title: "Zenodo API"
+    description: "Dépôt de recherche CERN - 3M+ records"
+    type: server
+    image: vardaa/mcp-zenodo:latest
+    allowHosts:
+      - zenodo.org:443
+    tools:
+      - name: search_records
+        description: "Rechercher des records"
+      - name: get_record
+        description: "Détails d'un record"
+      - name: get_communities
+        description: "Communautés Zenodo"
+    config:
+      secrets:
+        - name: zenodo.access_token
+          env: ZENODO_ACCESS_TOKEN
+          example: your-access-token
+    metadata:
+      category: data
+      tags: [zenodo, cern, repository]
+      priority: medium
+      license: "Open Access"
+    readme: "https://developers.zenodo.org/"
+
+  # ═══════════════════════════════════════════════════════════════
+  # CATÉGORIE 9: SOURCES SPÉCIALISÉES (Optionnelles)
+  # ═══════════════════════════════════════════════════════════════
+
+  clinicaltrials:
+    title: "ClinicalTrials.gov API"
+    description: "Registre des essais cliniques - 450K+ études"
+    type: server
+    image: vardaa/mcp-clinicaltrials:latest
+    allowHosts:
+      - clinicaltrials.gov:443
+    tools:
+      - name: search_studies
+        description: "Rechercher des essais cliniques"
+      - name: get_study
+        description: "Détails d'une étude"
+    metadata:
+      category: health
+      tags: [clinicaltrials, health, studies]
+      priority: medium
+      sector_specific: health
+
+  uniprot:
+    title: "UniProt REST API"
+    description: "Base de données de protéines - 250M+ séquences"
+    type: server
+    image: vardaa/mcp-uniprot:latest
+    allowHosts:
+      - rest.uniprot.org:443
+    tools:
+      - name: search_proteins
+        description: "Rechercher des protéines"
+      - name: get_protein
+        description: "Détails d'une protéine"
+    metadata:
+      category: biotech
+      tags: [uniprot, proteins, biotech]
+      priority: medium
+      sector_specific: biotech
+
+  copernicus:
+    title: "Copernicus Data Space"
+    description: "Données d'observation de la Terre - Sentinel, Landsat"
+    type: server
+    image: vardaa/mcp-copernicus:latest
+    allowHosts:
+      - dataspace.copernicus.eu:443
+    tools:
+      - name: search_products
+        description: "Rechercher des produits satellite"
+      - name: get_product
+        description: "Détails d'un produit"
+    config:
+      secrets:
+        - name: copernicus.username
+          env: COPERNICUS_USERNAME
+          example: your-username
+        - name: copernicus.password
+          env: COPERNICUS_PASSWORD
+          example: your-password
+    metadata:
+      category: environment
+      tags: [copernicus, satellite, earth-observation]
+      priority: medium
+      sector_specific: environment
+    readme: "https://documentation.dataspace.copernicus.eu/"
+
+# ═══════════════════════════════════════════════════════════════
+# PROFILES - Groupes de serveurs prédéfinis
+# ═══════════════════════════════════════════════════════════════
+
+profiles:
+  # Profil minimal pour démarrer rapidement
+  quick-start:
+    description: "5 serveurs essentiels pour commencer"
+    servers:
+      - cordis
+      - openaire
+      - ror
+      - crossref
+      - openalex
+
+  # Profil recherche de partenaires
+  partner-search:
+    description: "Serveurs pour trouver des partenaires de consortium"
+    servers:
+      - eu-partner-search
+      - openaire
+      - ror
+      - orcid
+      - cordis
+
+  # Profil état de l'art
+  state-of-art:
+    description: "Serveurs pour la revue de littérature"
+    servers:
+      - semantic-scholar
+      - europe-pmc
+      - crossref
+      - openalex
+      - pubmed
+      - opencitations
+
+  # Profil complet
+  full:
+    description: "Tous les serveurs activés"
+    servers:
+      - eu-funding-portal
+      - cordis
+      - era-learn
+      - eu-partner-search
+      - openaire
+      - ror
+      - orcid
+      - semantic-scholar
+      - europe-pmc
+      - crossref
+      - openalex
+      - pubmed
+      - euroscivoc
+      - cordis-ref
+      - opencitations
+      - scholexplorer
+      - grist
+      - open-funder-registry
+      - vies
+      - epo-ops
+      - eurostat
+      - wikidata
+      - datacite
+      - zenodo
+
+  # Profil santé
+  health:
+    description: "Serveurs pour le secteur santé"
+    servers:
+      - europe-pmc
+      - pubmed
+      - clinicaltrials
+      - uniprot
+      - cordis
+      - openaire
+
+  # Profil environnement
+  environment:
+    description: "Serveurs pour le secteur environnement"
+    servers:
+      - copernicus
+      - eurostat
+      - cordis
+      - openaire
+      - wikidata

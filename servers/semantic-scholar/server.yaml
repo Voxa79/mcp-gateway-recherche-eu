@@ -1,0 +1,88 @@
+# Semantic Scholar API - MCP Server
+name: semantic-scholar
+image: vardaa/mcp-semantic-scholar
+type: server
+
+meta:
+  category: literature
+  tags:
+    - semantic-scholar
+    - papers
+    - citations
+    - ai
+    - research
+    - h-index
+  gateway: recherche-eu
+  priority: 5  # ⭐⭐⭐⭐⭐
+
+about:
+  title: "Semantic Scholar API"
+  description: |
+    Serveur MCP pour accéder à Semantic Scholar (Allen Institute for AI).
+    
+    Contenu disponible:
+    • 200M+ articles scientifiques
+    • Citations, auteurs, h-index
+    • Recommandations AI
+    • PDFs open access
+    
+    Idéal pour:
+    • État de l'art exhaustif
+    • Analyse des citations
+    • Identification d'experts
+  icon: "📖"
+
+source:
+  api_base: "https://api.semanticscholar.org/graph/v1/"
+  documentation: "https://api.semanticscholar.org/"
+
+config:
+  env:
+    - name: SEMANTIC_SCHOLAR_API_KEY
+      description: "API key gratuite (optionnelle, augmente rate limit)"
+      required: false
+
+auth:
+  type: apiKey
+  free_for_research: true
+  rate_limit: "1 RPS sans clé, 100 RPS avec clé gratuite"
+
+formats:
+  - json
+
+tools:
+  - name: search_papers
+    description: "Rechercher des articles scientifiques"
+    parameters:
+      query:
+        type: string
+      fields:
+        type: array
+        default: ["title", "abstract", "authors", "year", "citationCount"]
+      limit:
+        type: integer
+        default: 100
+        
+  - name: get_paper_details
+    description: "Détails complets d'un article"
+    parameters:
+      paper_id:
+        type: string
+        
+  - name: get_paper_citations
+    description: "Articles citant un papier"
+    parameters:
+      paper_id:
+        type: string
+        
+  - name: get_author_papers
+    description: "Publications d'un auteur"
+    parameters:
+      author_id:
+        type: string
+        
+  - name: get_recommendations
+    description: "Recommandations AI basées sur un papier"
+    parameters:
+      paper_id:
+        type: string

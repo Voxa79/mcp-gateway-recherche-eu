@@ -1,0 +1,79 @@
+# Crossref REST API - MCP Server
+name: crossref
+image: vardaa/mcp-crossref
+type: server
+
+meta:
+  category: literature
+  tags:
+    - crossref
+    - doi
+    - citations
+    - metadata
+    - funding
+    - orcid
+  gateway: recherche-eu
+  priority: 5  # ⭐⭐⭐⭐⭐
+
+about:
+  title: "Crossref REST API"
+  description: |
+    Serveur MCP pour accéder aux métadonnées Crossref.
+    
+    Contenu disponible:
+    • 176M+ métadonnées DOI
+    • Citations, références
+    • Funding info, ORCIDs
+    • Abstracts (certains)
+    
+    Idéal pour:
+    • Résolution de DOI
+    • Analyse des financements
+    • Métadonnées complètes
+  icon: "🔖"
+
+source:
+  api_base: "https://api.crossref.org/"
+  documentation: "https://api.crossref.org/swagger-ui/index.html"
+
+config:
+  env:
+    - name: CROSSREF_MAILTO
+      description: "Email pour polite pool (recommandé)"
+      example: "your-email@example.com"
+
+auth:
+  type: none
+  free_for_research: true
+  rate_limit: "Aucune stricte (polite pool avec email)"
+
+formats:
+  - json
+
+tools:
+  - name: search_works
+    description: "Rechercher des publications"
+    parameters:
+      query:
+        type: string
+      filter:
+        type: string
+        description: "Filtres (funder, type, etc.)"
+        
+  - name: get_work_by_doi
+    description: "Métadonnées par DOI"
+    parameters:
+      doi:
+        type: string
+        
+  - name: get_funder_works
+    description: "Publications par financeur"
+    parameters:
+      funder_id:
+        type: string
+        
+  - name: search_funders
+    description: "Rechercher des organismes financeurs"
+    parameters:
+      query:
+        type: string

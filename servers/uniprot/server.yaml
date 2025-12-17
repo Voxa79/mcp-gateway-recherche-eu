@@ -1,0 +1,82 @@
+# UniProt REST API - MCP Server
+name: uniprot
+image: vardaa/mcp-uniprot
+type: server
+
+meta:
+  category: literature
+  tags:
+    - uniprot
+    - proteins
+    - sequences
+    - biotech
+    - bioinformatics
+  gateway: recherche-eu
+  priority: 3  # ⭐⭐⭐
+  sector_specific: biotech
+
+about:
+  title: "UniProt REST API"
+  description: |
+    Serveur MCP pour accéder à la base de données UniProt.
+    
+    🧬 SPÉCIFIQUE AU SECTEUR BIOTECH
+    
+    Contenu disponible:
+    • 250M+ séquences protéiques
+    • Annotations fonctionnelles
+    • Structures 3D
+    • Voies métaboliques
+    
+    Idéal pour:
+    • Recherche biotechnologique
+    • Projets bioinformatique
+    • Drug discovery
+  icon: "🧬"
+
+source:
+  api_base: "https://rest.uniprot.org/"
+  documentation: "https://www.uniprot.org/help/api"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+  - fasta
+  - xml
+
+tools:
+  - name: search_proteins
+    description: "Rechercher des protéines"
+    parameters:
+      query:
+        type: string
+      organism:
+        type: string
+        description: "Organisme (ex: human, mouse)"
+      reviewed:
+        type: boolean
+        default: true
+        description: "Swiss-Prot uniquement"
+        
+  - name: get_protein
+    description: "Détails d'une protéine"
+    parameters:
+      accession:
+        type: string
+        description: "UniProt accession"
+        
+  - name: get_sequence
+    description: "Séquence FASTA"
+    parameters:
+      accession:
+        type: string
+        
+  - name: blast_search
+    description: "Recherche par similarité de séquence"
+    parameters:
+      sequence:
+        type: string
+        description: "Séquence FASTA"

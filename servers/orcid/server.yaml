@@ -1,0 +1,71 @@
+# ORCID Public API - MCP Server
+name: orcid
+image: vardaa/mcp-orcid
+type: server
+
+meta:
+  category: researchers
+  tags:
+    - orcid
+    - researchers
+    - authors
+    - profiles
+    - affiliations
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "ORCID Public API"
+  description: |
+    Serveur MCP pour accéder aux profils ORCID des chercheurs.
+    
+    Contenu disponible:
+    • 15M+ profils chercheurs
+    • Publications liées
+    • Affiliations, expertises
+    
+    Idéal pour:
+    • Identification de chercheurs
+    • Validation d'expertises
+    • Construction de consortiums
+  icon: "👤"
+
+source:
+  api_base: "https://pub.orcid.org/v3.0/"
+  documentation: "https://info.orcid.org/documentation/api-tutorials/"
+
+auth:
+  type: none
+  free_for_research: true
+  note: "Lecture publique gratuite"
+
+formats:
+  - json
+  - xml
+
+tools:
+  - name: search_researchers
+    description: "Rechercher des chercheurs"
+    parameters:
+      query:
+        type: string
+      affiliation:
+        type: string
+        
+  - name: get_profile
+    description: "Profil complet d'un chercheur"
+    parameters:
+      orcid_id:
+        type: string
+        
+  - name: get_works
+    description: "Publications d'un chercheur"
+    parameters:
+      orcid_id:
+        type: string
+        
+  - name: get_affiliations
+    description: "Affiliations d'un chercheur"
+    parameters:
+      orcid_id:
+        type: string

@@ -1,0 +1,62 @@
+# GRIST API (Grant Information System) - MCP Server
+name: grist
+image: vardaa/mcp-grist
+type: server
+
+meta:
+  category: indicators
+  tags:
+    - grist
+    - grants
+    - funding
+    - europe-pmc
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "GRIST API (Grant Information System)"
+  description: |
+    Serveur MCP pour accéder aux informations sur les grants via Europe PMC.
+    
+    Contenu disponible:
+    • Informations sur grants
+    • Financeurs (ROR IDs)
+    • Montants, durées
+    
+    Idéal pour:
+    • Analyse des financements
+    • Patterns de funding
+    • Identification de financeurs
+  icon: "💵"
+
+source:
+  api_base: "https://europepmc.org/GristAPI/"
+  documentation: "https://europepmc.org/GristAPI"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - json
+
+tools:
+  - name: search_grants
+    description: "Rechercher des grants"
+    parameters:
+      query:
+        type: string
+      funder:
+        type: string
+        
+  - name: get_grant_details
+    description: "Détails d'un grant"
+    parameters:
+      grant_id:
+        type: string
+        
+  - name: get_funder_grants
+    description: "Grants par financeur"
+    parameters:
+      funder_id:
+        type: string

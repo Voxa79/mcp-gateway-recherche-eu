@@ -1,0 +1,68 @@
+# CORDIS Reference Data - MCP Server
+name: cordis-ref
+image: vardaa/mcp-cordis-ref
+type: server
+
+meta:
+  category: reference
+  tags:
+    - cordis
+    - reference
+    - programmes
+    - topics
+    - keywords
+  gateway: recherche-eu
+  priority: 4  # ⭐⭐⭐⭐
+
+about:
+  title: "CORDIS Reference Data"
+  description: |
+    Serveur MCP pour accéder aux données de référence CORDIS.
+    
+    Contenu disponible:
+    • Programmes, topics, keywords
+    • Types d'actions, pays
+    • Types d'organisations
+    
+    Idéal pour:
+    • Comprendre les programmes
+    • Mapper les topics
+    • Référentiels EU
+  icon: "📋"
+
+source:
+  api_base: "https://data.europa.eu/data/dataset/cordisref-data"
+  documentation: "https://data.europa.eu/data/dataset/cordisref-data"
+
+auth:
+  type: none
+  free_for_research: true
+
+formats:
+  - csv
+  - xml
+  - json
+
+tools:
+  - name: get_programmes
+    description: "Liste des programmes"
+    parameters:
+      active_only:
+        type: boolean
+        default: true
+        
+  - name: get_topics
+    description: "Topics d'un programme"
+    parameters:
+      programme:
+        type: string
+        
+  - name: get_action_types
+    description: "Types d'actions"
+    parameters: {}
+    
+  - name: get_countries
+    description: "Pays éligibles"
+    parameters:
+      programme:
+        type: string

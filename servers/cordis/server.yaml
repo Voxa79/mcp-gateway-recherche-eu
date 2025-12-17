@@ -1,0 +1,182 @@
+# CORDIS API - MCP Server
+# Format 100% compatible Docker MCP Registry
+
+name: cordis
+image: vardaa/mcp-cordis
+type: server
+
+meta:
+  category: funding
+  tags:
+    - cordis
+    - eu-projects
+    - horizon-europe
+    - research
+    - funding
+  gateway: recherche-eu
+  priority: 5  # Critique
+
+about:
+  title: "CORDIS - Community Research and Development Information Service"
+  description: |
+    Serveur MCP pour accéder à CORDIS, la base de données officielle des projets 
+    de recherche financés par l'Union Européenne.
+    
+    Contenu disponible:
+    • 100,000+ projets depuis FP1 jusqu'à Horizon Europe
+    • Informations sur les partenaires et consortiums
+    • Publications et livrables des projets
+    • Budgets et financements
+    
+    Cas d'usage:
+    • Recherche de projets similaires pour benchmarking
+    • Identification de partenaires potentiels
+    • Analyse des tendances de financement
+    • Veille sur les résultats de recherche EU
+  icon: https://cordis.europa.eu/favicon.ico
+
+source:
+  project: https://github.com/vardaa/mcp-cordis
+  branch: main
+  api_base: https://cordis.europa.eu/api/
+  documentation: https://cordis.europa.eu/guidance/en
+
+run:
+  command:
+    - --transport=stdio
+
+# Pas de secrets requis - API publique
+config:
+  description: "CORDIS est une API publique sans authentification requise"
+
+allowHosts:
+  - cordis.europa.eu:443
+  - api.cordis.europa.eu:443
+
+tools:
+  - name: search_projects
+    description: "Rechercher des projets par mots-clés, programme, pays, organisation"
+    parameters:
+      query:
+        type: string
+        description: "Termes de recherche"
+        required: true
+      programme:
+        type: string
+        description: "Programme de financement (H2020, HORIZON, FP7...)"
+      country:
+        type: string
+        description: "Code pays ISO (BE, FR, DE...)"
+      status:
+        type: string
+        description: "Statut du projet (ongoing, closed)"
+      from_date:
+        type: string
+        description: "Date de début minimum (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "Date de fin maximum (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Nombre max de résultats"
+        default: 20
+
+  - name: get_project
+    description: "Récupérer les détails complets d'un projet par son ID ou acronyme"
+    parameters:
+      project_id:
+        type: string
+        description: "ID CORDIS ou acronyme du projet"
+        required: true
+
+  - name: search_organizations
+    description: "Rechercher des organisations participantes aux projets EU"
+    parameters:
+      name:
+        type: string
+        description: "Nom de l'organisation"
+      country:
+        type: string
+        description: "Code pays ISO"
+      type:
+        type: string
+        description: "Type (HES, REC, PRC, PUB, OTH)"
+      limit:
+        type: integer
+        default: 20
+
+  - name: get_organization
+    description: "Détails d'une organisation et ses projets"
+    parameters:
+      org_id:
+        type: string
+        description: "ID de l'organisation"
+        required: true
+
+  - name: get_project_results
+    description: "Publications, datasets et livrables d'un projet"
+    parameters:
+      project_id:
+        type: string
+        description: "ID du projet"
+        required: true
+      result_type:
+        type: string
+        description: "Type de résultat (publication, dataset, deliverable)"
+
+  - name: get_project_partners
+    description: "Liste des partenaires d'un projet avec leurs rôles et budgets"
+    parameters:
+      project_id:
+        type: string
+        description: "ID du projet"
+        required: true
+
+  - name: search_calls
+    description: "Rechercher des appels à projets (historique)"
+    parameters:
+      programme:
+        type: string
+        description: "Programme de financement"
+      topic:
+        type: string
+        description: "Topic ou domaine"
+      year:
+        type: integer
+        description: "Année de l'appel"
+
+resources:
+  - name: programmes
+    description: "Liste des programmes de financement EU"
+    uri: "cordis://programmes"
+    
+  - name: topics
+    description: "Topics et domaines de recherche"
+    uri: "cordis://topics"
+
+prompts:
+  - name: find_similar_projects
+    description: "Trouver des projets similaires à une idée de recherche"
+    arguments:
+      - name: research_idea
+        description: "Description de l'idée de recherche"
+        required: true
+      - name: target_programme
+        description: "Programme visé (Horizon Europe, Digital Europe...)"
+        required: false
+
+  - name: analyze_consortium
+    description: "Analyser la composition d'un consortium type pour un topic"
+    arguments:
+      - name: topic
+        description: "Topic ou domaine de recherche"
+        required: true
+
+metadata:
+  license: "Open Data - Reuse encouraged"
+  owner: European Commission
+  requires_license: false
+  rate_limit: "No strict limit, fair use policy"
+  
+readme: "https://cordis.europa.eu/guidance/en"
+upstream: "https://cordis.europa.eu/"
